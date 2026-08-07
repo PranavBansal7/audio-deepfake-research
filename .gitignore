@@ -1,14 +1,27 @@
-# Ignore heavy model checkpoints
-*.pt
-*.pth
-pretrained_models/
+# jupyter
+.ipynb_checkpoints/
 
-# Ignore datasets and audio files
-*.zip
-*.flac
-*.wav
-database/
-
-# Ignore Python caches
+# python
 __pycache__/
 *.pyc
+
+#datasets
+database/
+*.flac
+*.zip
+
+# model checkpoints
+*.pth
+
+# temp scripts
+extract_code.py
+
+# Extra ignores
+*.pt
+*.wav
+pretrained_models/
+Scores/
+phase2_outputs/
+*.swp
+*.swp
+eval_CM_scores_2019_LA_eval.txt
