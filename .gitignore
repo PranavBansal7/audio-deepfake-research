@@ -26,3 +26,9 @@ phase2_outputs/
 *.swp
 eval_CM_scores_2019_LA_eval.txt
 phase3_outputs/
+1781715680033-cv-corpus-26.0-2026-06-12-hi/
+README_phase4.md
+estimate_pool.py
+full_pool_scan.py
+hindi_griffinlim_eval_final/
+sweep_inv_mel_iters.py

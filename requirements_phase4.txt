@@ -1,0 +1,13 @@
+# Pinned to match the Phase 1-3 environment (Python 3.8.20 / torch 1.13.1).
+# No functional downside for this script: MelSpectrogram/InverseMelScale/GriffinLim
+# have had stable APIs since well before torchaudio 0.13.1, and the A100 is fully
+# supported under torch 1.13.1. Using one environment for all phases avoids any
+# risk of numeric drift between the Phase 1-3 baseline and later phases.
+torch==1.13.1
+torchaudio==0.13.1
+numpy>=1.21,<2.0          # numpy 2.x breaks torch 1.13's compiled extensions
+pandas>=1.3,<2.0            # pandas 2.0 dropped Python 3.8 support
+librosa>=0.9,<0.11
+soundfile>=0.11
+matplotlib>=3.5,<3.8          # matplotlib 3.8 dropped Python 3.8 support
+tqdm>=4.64
