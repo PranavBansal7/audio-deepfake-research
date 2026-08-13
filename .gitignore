@@ -32,3 +32,5 @@ estimate_pool.py
 full_pool_scan.py
 hindi_griffinlim_eval_final/
 sweep_inv_mel_iters.py
+flagged_109.csv
+clean_1016.csv

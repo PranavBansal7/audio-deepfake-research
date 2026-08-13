@@ -51,15 +51,32 @@ Expected CommonVoice directory layout (standard CV release):
             common_voice_hi_XXXXXXXX.mp3
             ...
 
+Amplitude handling (corrected methodology)
+------------------------------------------
+Each fake is RMS-matched to its own paired real clip, preserving the source
+clip's loudness relationship. But if that RMS match would push any sample past
+the 0.99 digital ceiling, the script falls back to *smooth peak normalization*
+(scaling the raw Griffin-Lim reconstruction so its peak lands exactly at 0.99)
+instead of hard-clipping samples. Hard-clamping was the flaw in the first
+version of this dataset: it produced flat-topped, distorted waveforms on 109
+pairs, which had to be isolated and re-synthesized (step2/step7/step8/step9
+fix scripts). The dynamic peak-fallback logic here is the verified correction
+from step7, including its higher-fidelity InverseMelScale settings
+(inv_mel_max_iter=1500, SGD momentum 0.99) and no_grad Griffin-Lim pass.
+
 Output layout:
     <output_dir>/
         real_hindi/hindi_real_0000.wav ...
         fake_hindi_griffinlim/hindi_fake_0000.wav ...
-        protocol.txt        <- ASVspoof-LA-style protocol (space-delimited, no header)
-        metadata.csv         <- rich metadata for analysis / error slicing
+        protocol.txt         <- ASVspoof-LA-style protocol (space-delimited, no header)
         config.json           <- exact config used for this run
         environment.json       <- package/hardware versions for reproducibility
-        prepare.log              <- full run log
+
+    metadata.csv, prepare.log and the quality_check/ folder are deliberately
+    NOT written by this script anymore. Run sanity_check.py on the output
+    directory afterwards: it scans the actual audio files on disk and
+    generates all three, so the artifacts always describe the data as it
+    exists (including any later patches), not as the synthesis run intended it.
 """
 
 from __future__ import annotations
@@ -106,8 +123,9 @@ class Config:
     n_mels: int = 128
     gl_iters: int = 32              # matches Phase 4 plan's griffinlim n_iter
     gl_momentum: float = 0.99
-    inv_mel_max_iter: int = 200     # SGD steps for mel->linear pseudo-inverse
+    inv_mel_max_iter: int = 1500    # SGD steps for mel->linear pseudo-inverse (matches verified step7 fix)
     inv_mel_lr: float = 0.1
+    inv_mel_momentum: float = 0.99  # SGD momentum for InverseMelScale (matches verified step7 fix)
     batch_size: int = 16            # samples processed together per GPU forward pass
     min_duration_s: float = 2.0
     max_duration_s: float = 8.0
@@ -132,17 +150,15 @@ def set_seed(seed: int) -> None:
         torch.cuda.manual_seed_all(seed)
 
 
-def setup_logging(output_dir: Path) -> logging.Logger:
-    output_dir.mkdir(parents=True, exist_ok=True)
+def setup_logging() -> logging.Logger:
+    """Console-only logging for the synthesis run. The persistent prepare.log
+    artifact is written by sanity_check.py, which verifies the dataset as it
+    actually exists on disk (see module docstring)."""
     logger = logging.getLogger("phase4")
     logger.setLevel(logging.INFO)
     logger.handlers.clear()
 
     fmt = logging.Formatter("%(asctime)s | %(levelname)-7s | %(message)s", "%H:%M:%S")
-
-    fh = logging.FileHandler(output_dir / "prepare.log", mode="w")
-    fh.setFormatter(fmt)
-    logger.addHandler(fh)
 
     ch = logging.StreamHandler(sys.stdout)
     ch.setFormatter(fmt)
@@ -312,7 +328,7 @@ class GriffinLimSynthesizer:
             n_mels=cfg.n_mels,
             sample_rate=cfg.sample_rate,
             max_iter=cfg.inv_mel_max_iter,
-            sgdargs={"lr": cfg.inv_mel_lr, "momentum": 0.9},
+            sgdargs={"lr": cfg.inv_mel_lr, "momentum": cfg.inv_mel_momentum},
         ).to(self.device)
 
         self.gl_transform = T.GriffinLim(
@@ -352,7 +368,11 @@ class GriffinLimSynthesizer:
 
         mel_spec = self.mel_transform(batch)                  # (B, n_mels, frames)
         linear_spec = self.inv_mel(mel_spec).clamp(min=0.0)     # SGD can yield tiny negatives
-        recon = self.gl_transform(linear_spec)                    # (B, T')
+        # InverseMelScale's internal SGD needs gradients, but Griffin-Lim does
+        # not -- running it under no_grad saves substantial VRAM (verified in
+        # the step7 fix script), which matters for larger batches on the A100.
+        with torch.no_grad():
+            recon = self.gl_transform(linear_spec)                # (B, T')
 
         return [self.match_length(recon[i], L) for i, L in enumerate(lengths)]
 
@@ -367,28 +387,45 @@ class GriffinLimSynthesizer:
         return torch.nn.functional.pad(recon, (0, pad))
 
     @staticmethod
-    def match_amplitude(recon: torch.Tensor, reference: torch.Tensor, safety_peak: float = 0.99) -> torch.Tensor:
+    def match_amplitude(recon: torch.Tensor, reference: torch.Tensor, safety_peak: float = 0.99):
         """
-        Scale the Griffin-Lim reconstruction to match the RMS of its *own paired*
-        real clip -- not a fixed global target. Griffin-Lim's output level is
-        otherwise fairly arbitrary, so some normalization of the fake is
-        legitimate; but peak-normalizing every fake to the same fixed level (the
-        previous version of this function) would collapse natural loudness
-        variation across the fake set into one flat level regardless of each
-        source clip's loudness -- handing any downstream classifier or attribution
-        method a trivial amplitude cue that has nothing to do with language or
-        vocoder, which is exactly the kind of shortcut this project exists to
-        catch. Matching pairwise instead preserves the real clip's loudness
-        relationship in its paired fake. The real clip itself is never rescaled.
-        A safety clamp only engages if the matched result would clip.
+        Corrected amplitude handling (verified in the step7 fix script on the
+        109 previously-flagged pairs).
+
+        Default: scale the Griffin-Lim reconstruction to match the RMS of its
+        *own paired* real clip -- not a fixed global target. Griffin-Lim's
+        output level is otherwise fairly arbitrary, so some normalization of
+        the fake is legitimate; but peak-normalizing every fake to the same
+        fixed level would collapse natural loudness variation across the fake
+        set into one flat level regardless of each source clip's loudness --
+        handing any downstream classifier or attribution method a trivial
+        amplitude cue that has nothing to do with language or vocoder, which
+        is exactly the kind of shortcut this project exists to catch.
+
+        Fallback: if the RMS-matched waveform would exceed the safety_peak
+        ceiling, smoothly peak-normalize the raw reconstruction so its peak
+        lands at safety_peak, and accept the resulting RMS mismatch. The first
+        version of this pipeline hard-clipped in this situation instead, which
+        produced flat-topped, distorted waveforms (the 109 flagged pairs).
+        Smooth scaling preserves the waveform shape; a small number of
+        RMS-mismatched pairs is the acceptable price, and sanity_check.py
+        reports them as "peak_normalized" rather than as defects.
+
+        The real clip itself is never rescaled.
+
+        Returns (scaled_recon, method) where method is "rms_matched" or
+        "peak_normalized".
         """
         ref_rms = reference.pow(2).mean().sqrt().clamp(min=1e-8)
         recon_rms = recon.pow(2).mean().sqrt().clamp(min=1e-8)
-        matched = recon * (ref_rms / recon_rms)
-        peak = matched.abs().max()
-        if peak > safety_peak:
-            matched = matched * (safety_peak / peak)
-        return matched
+        rms_scale = ref_rms / recon_rms
+        recon_peak = recon.abs().max().clamp(min=1e-8)
+
+        predicted_peak = recon_peak * rms_scale
+        if predicted_peak > safety_peak:
+            # RMS matching would clip -> fall back to smooth peak normalization
+            return recon * (safety_peak / recon_peak), "peak_normalized"
+        return recon * rms_scale, "rms_matched"
 
 
 def cross_check_against_librosa(
@@ -448,7 +485,7 @@ def run(cfg: Config) -> None:
     real_dir.mkdir(parents=True, exist_ok=True)
     fake_dir.mkdir(parents=True, exist_ok=True)
 
-    logger = setup_logging(output_dir)
+    logger = setup_logging()
     logger.info(f"Config: {json.dumps(dataclasses.asdict(cfg), default=str, indent=2)}")
 
     set_seed(cfg.seed)
@@ -480,12 +517,13 @@ def run(cfg: Config) -> None:
 
     records = []
     n_cross_checked = 0
+    n_peak_normalized = 0
     pair_idx = 0
     batch_wavs: list = []
     batch_rows: list = []
 
     def flush_batch():
-        nonlocal pair_idx
+        nonlocal pair_idx, n_peak_normalized
         if not batch_wavs:
             return
         recons = synth.synthesize_batch(batch_wavs)
@@ -493,10 +531,14 @@ def run(cfg: Config) -> None:
             try:
                 # Real audio keeps its natural loudness (only a safety clamp for
                 # true [-1, 1] range violations, not a rescale). The fake is
-                # RMS-matched to its own paired real clip -- see match_amplitude's
-                # docstring for why this is deliberate rather than a fixed target.
+                # RMS-matched to its own paired real clip, with a smooth
+                # peak-normalization fallback if that match would clip -- see
+                # match_amplitude's docstring for why this is deliberate.
                 real_out = wav.clamp(-1.0, 1.0).cpu()
-                fake_out = GriffinLimSynthesizer.match_amplitude(recon, wav).cpu()
+                fake_out, norm_method = GriffinLimSynthesizer.match_amplitude(recon, wav)
+                fake_out = fake_out.cpu()
+                if norm_method == "peak_normalized":
+                    n_peak_normalized += 1
 
                 if not (torch.isfinite(real_out).all() and torch.isfinite(fake_out).all()):
                     raise ValueError("non-finite samples in output audio")
@@ -561,9 +603,6 @@ def run(cfg: Config) -> None:
             f"failures). Re-run with a larger --oversample_factor or looser filters."
         )
 
-    metadata = pd.DataFrame(records)
-    metadata.to_csv(output_dir / "metadata.csv", index=False)
-
     # ASVspoof-LA-style protocol file: SPEAKER_ID UTT_ID - ATTACK_ID LABEL
     protocol_lines = []
     for r in records:
@@ -573,13 +612,21 @@ def run(cfg: Config) -> None:
         protocol_lines.append(f"{r['client_id']} {fake_utt} - GL spoof")
     (output_dir / "protocol.txt").write_text("\n".join(protocol_lines) + "\n")
 
-    # Integrity summary
+    # Run summary. metadata.csv / prepare.log / quality_check/ are NOT written
+    # here -- sanity_check.py generates them by scanning the audio on disk.
+    durations = [r["duration_s"] for r in records]
+    speakers = {r["client_id"] for r in records}
     logger.info("=" * 70)
     logger.info(f"DONE. Produced {len(records)} real/fake pairs ({2 * len(records)} files).")
-    if len(records) > 0:
-        logger.info(f"Mean duration: {metadata['duration_s'].mean():.2f}s "
-                    f"(min {metadata['duration_s'].min():.2f}s, max {metadata['duration_s'].max():.2f}s)")
-        logger.info(f"Unique speakers: {metadata['client_id'].nunique()}")
+    logger.info(
+        f"Amplitude normalization: {len(records) - n_peak_normalized} RMS-matched, "
+        f"{n_peak_normalized} peak-normalized fallback (expected when the RMS match "
+        f"would clip -- smooth scaling, no flat tops)."
+    )
+    if durations:
+        logger.info(f"Mean duration: {sum(durations) / len(durations):.2f}s "
+                    f"(min {min(durations):.2f}s, max {max(durations):.2f}s)")
+        logger.info(f"Unique speakers: {len(speakers)}")
         if len(records) <= 200:
             logger.info(
                 f"NOTE: n={len(records)} pairs is a reasonable initial diagnostic pass "
@@ -589,8 +636,9 @@ def run(cfg: Config) -> None:
                 f"intervals, or scale --n_pairs up (cheap on an A100; see README)."
             )
     logger.info(f"Outputs: {output_dir}")
-    logger.info("Next: run sanity_check.py to visually/statistically spot-check pairs "
-                "before moving to Phase 5.")
+    logger.info("Next: run sanity_check.py --data_dir <this output dir> to verify "
+                "the audio on disk and generate metadata.csv, prepare.log and "
+                "quality_check/ before moving to Phase 5.")
 
 
 # --------------------------------------------------------------------------- #
@@ -610,9 +658,13 @@ def parse_args() -> Config:
     p.add_argument("--hop_length", type=int, default=256)
     p.add_argument("--n_mels", type=int, default=128)
     p.add_argument("--gl_iters", type=int, default=32)
-    p.add_argument("--inv_mel_max_iter", type=int, default=200,
-                    help="SGD steps for mel->linear pseudo-inverse. Raise (e.g. 1000) "
-                         "for higher-fidelity reconstructions -- cheap on an A100.")
+    p.add_argument("--inv_mel_max_iter", type=int, default=1500,
+                    help="SGD steps for mel->linear pseudo-inverse. Default 1500 "
+                         "matches the verified step7 fix applied to the previously "
+                         "flagged pairs -- higher-fidelity than the original 200, "
+                         "and cheap on an A100.")
+    p.add_argument("--inv_mel_momentum", type=float, default=0.99,
+                    help="SGD momentum for InverseMelScale (matches the verified step7 fix).")
     p.add_argument("--batch_size", type=int, default=16,
                     help="Clips processed together per GPU forward pass through "
                          "mel/InverseMelScale/GriffinLim. Raise on an A100 (e.g. 32-64) "
