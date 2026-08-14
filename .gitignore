@@ -34,3 +34,7 @@ hindi_griffinlim_eval_final/
 sweep_inv_mel_iters.py
 flagged_109.csv
 clean_1016.csv
+hindi_pair_speaker_map.csv
+phase5_outputs/
+english_griffinlim_eval_final/
+cv_english_subset/
