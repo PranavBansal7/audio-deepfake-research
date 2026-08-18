@@ -1,0 +1,12 @@
+{
+  "eer_original_pct": 0.22069465645264424,
+  "eer_threshold_original": 1.995739221572876,
+  "eer_trimmed_pct": 8.810945959144464,
+  "eer_threshold_trimmed": -4.638018608093262,
+  "eer_delta_pct": 8.59025130269182,
+  "n_bonafide": 7355,
+  "n_spoof": 63882,
+  "prediction_flip_rate_overall": 0.06542948187037635,
+  "prediction_flip_rate_bonafide": 0.601631543167913,
+  "prediction_flip_rate_spoof": 0.003694311386619079
+}

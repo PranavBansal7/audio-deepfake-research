@@ -1,0 +1,49 @@
+{
+  "experiment": "speaker_level_heterogeneity",
+  "english_speakers": 974,
+  "hindi_speakers": 338,
+  "speaker_metric": "mean real bonafide_logit minus mean fake bonafide_logit",
+  "english_summary": {
+    "language": "english",
+    "n_speakers": 974,
+    "mean": 5.719193213416454,
+    "median": 6.051685273647308,
+    "sd": 3.3389928675946585,
+    "q10": 1.454523634910584,
+    "q25": 3.89428648352623,
+    "q75": 8.070385158061981,
+    "q90": 9.836518979072572,
+    "fraction_nonpositive": 0.049281314168377825
+  },
+  "hindi_summary": {
+    "language": "hindi",
+    "n_speakers": 338,
+    "mean": 2.3008538499419418,
+    "median": 2.8496894761919975,
+    "sd": 3.789026164217943,
+    "q10": -3.0242495330981902,
+    "q25": -0.09231747686862951,
+    "q75": 5.127510975115001,
+    "q90": 6.5829563190539675,
+    "fraction_nonpositive": 0.25443786982248523
+  },
+  "bootstrap_difference": {
+    "observed_mean_difference_hindi_minus_english": -3.4183393634745123,
+    "mean_ci_lo": -3.8807938781475695,
+    "mean_ci_hi": -2.9758209036506953,
+    "observed_median_difference_hindi_minus_english": -3.201995797455311,
+    "median_ci_lo": -3.8915464114490894,
+    "median_ci_hi": -2.6561166563630105,
+    "bootstrap_unit": "speaker",
+    "n_bootstrap": 2000,
+    "seed": 17235
+  },
+  "mann_whitney_u": {
+    "statistic": 79199.0,
+    "p_value": 5.950151639304132e-46
+  },
+  "ks_test": {
+    "statistic": 0.38677204962152045,
+    "p_value": 4.490165840128162e-34
+  }
+}

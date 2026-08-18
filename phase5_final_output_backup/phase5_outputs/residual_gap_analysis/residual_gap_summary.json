@@ -1,0 +1,20 @@
+{
+  "experiment": "residual_gap_analysis",
+  "english": {
+    "n": 1125,
+    "speakers": 974,
+    "weighted_mean_difficulty": -3.285895802519257,
+    "weighted_median_unweighted_reference": -3.18692147731781
+  },
+  "hindi": {
+    "n": 1125,
+    "speakers": 338,
+    "weighted_mean_difficulty": -2.0842161718798473,
+    "weighted_median_unweighted_reference": -1.0759235620498655
+  },
+  "weighted_mean_difference_hindi_minus_english": 1.2016796306394095,
+  "correlation_table": "phase5_outputs/residual_gap_analysis/residual_difficulty_correlations.csv",
+  "bootstrap_unit": "speaker",
+  "n_bootstrap": 2000,
+  "seed": 16235
+}

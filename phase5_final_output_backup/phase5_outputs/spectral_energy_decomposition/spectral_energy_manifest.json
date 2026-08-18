@@ -1,0 +1,38 @@
+{
+  "question": "Does the frequency-attribution proxy shift exceed what can be explained by ordinary spectral-energy differences?",
+  "stft_n_fft": 512,
+  "stft_hop": 160,
+  "sample_rate": 16000,
+  "bands_hz": {
+    "low": [
+      0,
+      1000
+    ],
+    "mid": [
+      1000,
+      4000
+    ],
+    "high": [
+      4000,
+      8000
+    ]
+  },
+  "samples_per_group": {
+    "english_real": 100,
+    "english_fake": 100,
+    "hindi_real": 100,
+    "hindi_fake": 100
+  },
+  "speaker_clusters": {
+    "english_real": 99,
+    "english_fake": 99,
+    "hindi_real": 86,
+    "hindi_fake": 86
+  },
+  "seed": 6235,
+  "n_bootstrap": 2000,
+  "ci": 0.95,
+  "primary_quantity": "proxy_frac",
+  "secondary_quantity": "excess_frac = proxy_frac - energy_frac",
+  "warning": "The proxy is not true frequency-domain attribution. It combines temporal attribution with spectral energy. This experiment tests the extent to which ordinary energy composition accounts for the observed proxy shift."
+}

@@ -1,83 +1,69 @@
-Automatic speaker verification spoofing and deepfake detection using wav2vec 2.0 and data augmentation
-===============
-This repository contains our implementation of the paper published in the Speaker Odyssey 2022 workshop, "Automatic speaker verification spoofing and deepfake detection using wav2vec 2.0 and data augmentation". This work produced state-of-the-art result on more challenging ASVspoof 2021 LA and DF database.
+# Explainability as a Diagnostic Tool for Multilingual Failure in Audio Deepfake Detection
 
-[Paper link here](https://arxiv.org/abs/2202.12233)
+> **Manuscript status:** [`research (7).pdf`](research%20(7).pdf) is an unpublished research draft. Its methods, analyses, results, and conclusions may change before submission or publication.
 
+This repository contains the code and frozen experimental artifacts supporting the draft paper, *Explainability as a Diagnostic Tool for Multilingual Failure in Audio Deepfake Detection*. It studies why a wav2vec 2.0 XLS-R + AASIST detector degrades on controlled Hindi versus English Griffin-Lim copy-synthesis data, using occlusion, Integrated Gradients, faithfulness tests, silence analyses, and acoustic robustness controls.
 
-## Installation
-First, clone the repository locally, create and activate a conda environment, and install the requirements :
-```
-$ git clone https://github.com/TakHemlata/SSL_Anti-spoofing.git
-$ conda create -n SSL_Spoofing python=3.7
-$ conda activate SSL_Spoofing
-$ pip install torch==1.8.1+cu111 torchvision==0.9.1+cu111 torchaudio==0.8.1 -f https://download.pytorch.org/whl/torch_stable.html
-$ cd fairseq-a54021305d6b3c4c5959ac9395135f63202db8f1
-(This fairseq folder can also be downloaded from https://github.com/pytorch/fairseq/tree/a54021305d6b3c4c5959ac9395135f63202db8f1)
-$ pip install --editable ./
-$ pip install -r requirements.txt
-```
+The primary result reported in the draft is a higher EER for Hindi (30.49%) than English (16.18%) under the matched Common Voice / Griffin-Lim protocol. The analyses investigate the persistence of this gap after silence trimming and acoustic controls, and the associated shift in frequency-band attribution.
 
+## Contents
 
-## Experiments
+| Area | Included material |
+| --- | --- |
+| Paper | `research (7).pdf` — current manuscript draft |
+| Baseline and model support | `model.py`, `data_utils_SSL.py`, `RawBoost.py`, `eval_metric_LA.py`, `run_eval_2019LA.py`, and the pinned `fairseq-*` source |
+| Phase 2 | English ASVspoof 2019 LA XAI replication: `phase2_xai_english_clean.py` and `phase2_outputs/` |
+| Phase 3 | Silence-shortcut replication: `phase3_shortcut.py` and `phase3_backup-20260811T163152Z-1-001/` |
+| Phase 4 | Hindi/English Griffin-Lim control-set preparation and quality checks |
+| Phase 5 | Controlled English/Hindi evaluation, attribution analysis, and frozen results in `phase5_final_output_backup/` |
+| Follow-up analyses | `exp1_*` through `exp8_*`, plus the continuation helpers for the reported robustness and explanation-drift analyses |
 
-### Dataset
-Our experiments are performed on the logical access (LA) and deepfake (DF) partition of the ASVspoof 2021 dataset (train on 2019 LA training and evaluate on 2021 LA and DF evaluation database).
+The tracked output directories contain the artifacts used by the draft, including attribution arrays, figures, score tables, run manifests, confidence-interval analyses, and statistical summaries. Raw datasets, audio clips, and model checkpoints are intentionally excluded.
 
-The ASVspoof 2019 dataset, which can can be downloaded from [here](https://datashare.is.ed.ac.uk/handle/10283/3336).
+## Requirements and external inputs
 
-The ASVspoof 2021 database is released on the zenodo site.
+The research was run with Python 3.8.20, PyTorch 1.13.1, torchaudio 0.13.1, and an NVIDIA A100 GPU. The provided requirements list the analysis dependencies, while the local `fairseq-*` directory pins the XLS-R implementation revision used by `model.py`.
 
-LA [here](https://zenodo.org/record/4837263#.YnDIinYzZhE)
+To reproduce model-dependent steps, obtain these external resources yourself and configure the paths in the relevant scripts:
 
-DF [here](https://zenodo.org/record/4835108#.YnDIb3YzZhE)
+- ASVspoof 2019 LA evaluation audio (the evaluation protocol is retained in `database/`)
+- Mozilla Common Voice Hindi and English source data
+- `xlsr2_300m.pt` (XLS-R 300M frontend)
+- `best_SSL_model_LA.pth` (the pretrained countermeasure checkpoint)
 
-For ASVspoof 2021 dataset keys (labels) and metadata are available [here](https://www.asvspoof.org/index2021.html)
+Example environment setup:
 
-## Pre-trained wav2vec 2.0 XLSR (300M)
-Download the XLSR models from [here](https://github.com/pytorch/fairseq/tree/main/examples/wav2vec/xlsr)
+```bash
+conda create -n multilingual-deepfake python=3.8
+conda activate multilingual-deepfake
 
-### Training LA
-To train the model run:
-```
-CUDA_VISIBLE_DEVICES=0 main_SSL_LA.py --track=LA --lr=0.000001 --batch_size=14 --loss=WCE  
-```
-### Testing LA and DF
-
-To evaluate your own model on LA and DF evaluation dataset:
-```
-CUDA_VISIBLE_DEVICES=0 python main_SSL_LA.py --track=LA --is_eval --eval --model_path='/path/to/your/best_SSL_model_LA.pth' --eval_output='eval_CM_scores_file_SSL_LA.txt'
-
-CUDA_VISIBLE_DEVICES=0 python main_SSL_DF.py --track=DF --is_eval --eval --model_path='/path/to/your/best_SSL_model_LA.pth' --eval_output='eval_CM_scores_file_SSL_DF.txt'
+# Install the appropriate PyTorch 1.13.1 / CUDA build for your system first.
+cd fairseq-a54021305d6b3c4c5959ac9395135f63202db8f1
+pip install --editable .
+cd ..
+pip install -r requirements.txt
 ```
 
-We also provide a pre-trained models. To use it you can run: 
+The model-dependent scripts expect `xlsr2_300m.pt` at the repository root and the countermeasure checkpoint at `pretrained_models/best_SSL_model_LA.pth` unless their configuration is changed.
 
-Pre-trained SSL antispoofing models are available for LA and DF [here](https://drive.google.com/drive/folders/1c4ywztEVlYVijfwbGLl9OEa1SNtFKppB?usp=sharing)
+## Research workflow
 
-```
-CUDA_VISIBLE_DEVICES=0 python main_SSL_LA.py --track=LA --is_eval --eval --model_path='/path/to/Pre_trained_models/best_SSL_model_LA.pth' --eval_output='eval_pre_trained_model_CM_scores_file_SSL_LA.txt'
+1. `run_eval_2019LA.py` verifies the in-domain ASVspoof 2019 LA baseline.
+2. `phase2_xai_english_clean.py` reproduces the English occlusion / Integrated Gradients and faithfulness analysis.
+3. `phase3_shortcut.py` tests the silence shortcut on ASVspoof 2019 LA.
+4. `prepare_hindi_griffinlim.py` and `prepare_english_griffinlim.py` construct matched Common Voice Griffin-Lim control data; the corresponding `sanity_check_*.py` scripts validate it.
+5. `phase5_hindi_eval.py` and `phase5b_occlusion_stats.py` run the controlled English–Hindi evaluation and explanation analysis.
+6. `exp1_*`–`exp8_*` reproduce the paper's robustness, interaction, spectral, speaker-level, and frequency-intervention analyses from the frozen Phase 5 data.
 
-CUDA_VISIBLE_DEVICES=0 python main_SSL_DF.py --track=DF --is_eval --eval --model_path='/path/to/Pre_trained_models/best_SSL_model_DF.pth' --eval_output='eval_pre_trained_model_CM_scores_file_SSL_DF.txt'
-```
-## Results using pre-trained model:
-EER: 0.82%, min t-DCF: 0.2066  on ASVspoof 2021 LA track.
+Read the configuration blocks and docstrings in each script before execution: dataset locations, checkpoints, and hardware assumptions are environment-specific. The archived result directories allow the paper's reported analyses to be inspected without rerunning data preparation or GPU inference.
 
-EER: 2.85 % on ASVspoof 2021 DF track.
+## Provenance and attribution
 
-Compute the min t-DCF and EER(%) on 2021 LA and DF evaluation dataset
-```
-python evaluate_2021_LA.py Score_LA.txt ./keys eval
+The detector implementation and pretrained-model workflow build on [Hemlata Tak et al.'s SSL_Anti-spoofing repository](https://github.com/TakHemlata/SSL_Anti-spoofing) and the associated wav2vec 2.0 XLS-R + AASIST work. The original MIT license is retained in [`LICENSE`](LICENSE). This repository's project-specific research scripts, controlled datasets, analyses, and frozen output artifacts support the draft paper above; it does not claim authorship of the underlying detector architecture.
 
-python evaluate_2021_DF.py Score_DF.txt ./keys eval
-``` 
-## Contact
-For any query regarding this repository, please contact:
-- Hemlata Tak: tak[at]eurecom[dot]fr
-## Citation
-If you use this code in your research please use the following citation:
+If you use the underlying detector implementation, please cite the original work:
+
 ```bibtex
-
 @inproceedings{tak2022automatic,
   title={Automatic speaker verification spoofing and deepfake detection using wav2vec 2.0 and data augmentation},
   author={Tak, Hemlata and Todisco, Massimiliano and Wang, Xin and Jung, Jee-weon and Yamagishi, Junichi and Evans, Nicholas},
@@ -85,4 +71,3 @@ If you use this code in your research please use the following citation:
   year={2022}
 }
 ```
-

@@ -1,0 +1,24 @@
+{
+  "sample_rate": 16000,
+  "n_fft": 512,
+  "hop_length": 160,
+  "center": false,
+  "bands_hz": {
+    "low": [
+      0,
+      1000
+    ],
+    "mid": [
+      1000,
+      4000
+    ],
+    "high": [
+      4000,
+      8000
+    ]
+  },
+  "fixed_len": 64600,
+  "n_samples_per_language_label": 100,
+  "model_checkpoint": "pretrained_models/best_SSL_model_LA.pth",
+  "interpretation": "delta_score = counterfactual bonafide_logit - original bonafide_logit. A large negative delta means removing that band reduced the bonafide score."
+}

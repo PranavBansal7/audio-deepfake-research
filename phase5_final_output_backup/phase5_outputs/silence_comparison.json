@@ -1,0 +1,48 @@
+{
+  "english_cv": {
+    "config": {
+      "top_db": 40.0,
+      "frame_length": 2048,
+      "hop_length": 512
+    },
+    "leading_silence_ms": {
+      "silence_only_eer_pct": 14.48888888888889,
+      "mean_real_ms": 409.77066666666667,
+      "mean_fake_ms": 0.05688888888888889,
+      "mean_fake_minus_real_ms": -409.71377777777775,
+      "wilcoxon_p": 3.663404961064909e-159,
+      "n_pairs": 1125
+    },
+    "trailing_silence_ms": {
+      "silence_only_eer_pct": 20.622222222222224,
+      "mean_real_ms": 445.26894444444446,
+      "mean_fake_ms": 0.0,
+      "mean_fake_minus_real_ms": -445.26894444444446,
+      "wilcoxon_p": 9.347615721717838e-148,
+      "n_pairs": 1125
+    }
+  },
+  "hindi_cv": {
+    "config": {
+      "top_db": 40.0,
+      "frame_length": 2048,
+      "hop_length": 512
+    },
+    "leading_silence_ms": {
+      "silence_only_eer_pct": 10.488888888888889,
+      "mean_real_ms": 469.5324444444444,
+      "mean_fake_ms": 44.34488888888889,
+      "mean_fake_minus_real_ms": -425.18755555555555,
+      "wilcoxon_p": 2.7270903236504403e-154,
+      "n_pairs": 1125
+    },
+    "trailing_silence_ms": {
+      "silence_only_eer_pct": 17.333333333333336,
+      "mean_real_ms": 573.1342222222222,
+      "mean_fake_ms": 57.79911111111111,
+      "mean_fake_minus_real_ms": -515.3351111111111,
+      "wilcoxon_p": 7.394304427459797e-151,
+      "n_pairs": 1125
+    }
+  }
+}

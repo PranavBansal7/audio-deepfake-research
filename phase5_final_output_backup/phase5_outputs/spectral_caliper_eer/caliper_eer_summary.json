@@ -1,0 +1,131 @@
+{
+  "experiment": "spectral_caliper_matched_eer",
+  "covariates": [
+    "low_energy_frac",
+    "mid_energy_frac",
+    "high_energy_frac",
+    "rms",
+    "peak",
+    "duration_s"
+  ],
+  "calipers_sd": [
+    1.0,
+    1.5,
+    2.0
+  ],
+  "results": [
+    {
+      "caliper_sd": 1.0,
+      "matched_pairs": 248,
+      "english": {
+        "eer_pct": 13.709677419354838,
+        "bootstrap_mean_eer_pct": 14.006883313527348,
+        "ci_lo_pct": 11.065573770491802,
+        "ci_hi_pct": 17.083333333333332,
+        "n_utterances": 496,
+        "n_clusters": 228,
+        "bootstrap_unit": "speaker",
+        "n_bootstrap": 2000,
+        "seed": 7345
+      },
+      "hindi": {
+        "eer_pct": 25.806451612903224,
+        "bootstrap_mean_eer_pct": 26.25797978350395,
+        "ci_lo_pct": 22.2688650358929,
+        "ci_hi_pct": 30.18928141308711,
+        "n_utterances": 496,
+        "n_clusters": 153,
+        "bootstrap_unit": "speaker",
+        "n_bootstrap": 2000,
+        "seed": 7355
+      },
+      "gap": {
+        "observed_hindi_minus_english_pp": 12.096774193548388,
+        "bootstrap_mean_pp": 12.444460990641069,
+        "ci_lo_pp": 7.404559857757528,
+        "ci_hi_pp": 17.589697913163267,
+        "bootstrap_unit": "speaker",
+        "n_bootstrap": 2000,
+        "seed": 7365
+      },
+      "median_match_distance": 0.6874645329332996,
+      "p95_match_distance": 0.9724056592327025
+    },
+    {
+      "caliper_sd": 1.5,
+      "matched_pairs": 471,
+      "english": {
+        "eer_pct": 14.8619957537155,
+        "bootstrap_mean_eer_pct": 14.469966384617575,
+        "ci_lo_pct": 12.26161913450826,
+        "ci_hi_pct": 16.666666666666664,
+        "n_utterances": 942,
+        "n_clusters": 424,
+        "bootstrap_unit": "speaker",
+        "n_bootstrap": 2000,
+        "seed": 7346
+      },
+      "hindi": {
+        "eer_pct": 24.416135881104033,
+        "bootstrap_mean_eer_pct": 24.496930924209405,
+        "ci_lo_pct": 21.13089095287238,
+        "ci_hi_pct": 27.923326673326663,
+        "n_utterances": 942,
+        "n_clusters": 214,
+        "bootstrap_unit": "speaker",
+        "n_bootstrap": 2000,
+        "seed": 7356
+      },
+      "gap": {
+        "observed_hindi_minus_english_pp": 9.554140127388536,
+        "bootstrap_mean_pp": 10.07719368615182,
+        "ci_lo_pp": 5.8629691780638185,
+        "ci_hi_pp": 14.228663446054748,
+        "bootstrap_unit": "speaker",
+        "n_bootstrap": 2000,
+        "seed": 7366
+      },
+      "median_match_distance": 1.188511358946773,
+      "p95_match_distance": 1.4893757417527498
+    },
+    {
+      "caliper_sd": 2.0,
+      "matched_pairs": 717,
+      "english": {
+        "eer_pct": 14.644351464435147,
+        "bootstrap_mean_eer_pct": 14.582917386708028,
+        "ci_lo_pct": 12.696038932228715,
+        "ci_hi_pct": 16.48832467800296,
+        "n_utterances": 1434,
+        "n_clusters": 634,
+        "bootstrap_unit": "speaker",
+        "n_bootstrap": 2000,
+        "seed": 7347
+      },
+      "hindi": {
+        "eer_pct": 23.84937238493724,
+        "bootstrap_mean_eer_pct": 23.894501692609555,
+        "ci_lo_pct": 20.779081233952297,
+        "ci_hi_pct": 27.542479269508547,
+        "n_utterances": 1434,
+        "n_clusters": 256,
+        "bootstrap_unit": "speaker",
+        "n_bootstrap": 2000,
+        "seed": 7357
+      },
+      "gap": {
+        "observed_hindi_minus_english_pp": 9.205020920502093,
+        "bootstrap_mean_pp": 9.23434002505739,
+        "ci_lo_pp": 5.238928456406218,
+        "ci_hi_pp": 13.142059108160174,
+        "bootstrap_unit": "speaker",
+        "n_bootstrap": 2000,
+        "seed": 7367
+      },
+      "median_match_distance": 1.8459018373855074,
+      "p95_match_distance": 1.9874457722986878
+    }
+  ],
+  "interpretation": "The caliper analysis is a secondary conditional-support sensitivity analysis. It asks whether the language EER gap persists among pairs with close multivariate fake-audio acoustic matches.",
+  "caveat": "Changing the caliper changes the target population. The primary sensitivity analysis is overlap weighting, which retains all pairs."
+}

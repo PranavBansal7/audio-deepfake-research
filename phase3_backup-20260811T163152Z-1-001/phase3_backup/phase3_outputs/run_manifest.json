@@ -1,0 +1,82 @@
+{
+  "phase": "Phase 3 \u2014 Shortcut Analysis (Replication)",
+  "timestamp": "2026-08-07T22:03:01.674279",
+  "config": {
+    "database_path": "database/LA/ASVspoof2019_LA_eval/",
+    "protocol_path": "database/LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt",
+    "checkpoint_path": "pretrained_models/best_SSL_model_LA.pth",
+    "phase2_out_dir": "phase2_outputs",
+    "repo_path": ".",
+    "out_dir": "phase3_outputs",
+    "sample_rate": 16000,
+    "fixed_len": 64600,
+    "silence_top_db": 40.0,
+    "silence_frame_length": 2048,
+    "silence_hop_length": 512,
+    "target_class": 1,
+    "eval_batch_size": 128,
+    "num_workers": 4,
+    "phase1_predictions_path": null,
+    "max_eval_utterances": null,
+    "log_every_n_batches": 20,
+    "attribution_topk_fracs": [
+      0.05,
+      0.1,
+      0.2
+    ],
+    "occlusion_window_for_overlap_ms": 50,
+    "seed": 1234,
+    "device": "cuda"
+  },
+  "environment_fingerprint": {
+    "git_commit_hash": "ff6a3ea2917853e658aab985505de1ecf265a951",
+    "git_working_tree_dirty": true,
+    "checkpoint_path": "pretrained_models/best_SSL_model_LA.pth",
+    "checkpoint_sha256": "bd6f36097259fe54e7004eb983651e5304d807be81156dbd04faccb70d91e10c",
+    "torch_version": "1.13.1+cu117",
+    "cuda_available": true,
+    "cuda_version": "11.7",
+    "cudnn_version": 8500,
+    "gpu_name": "NVIDIA A100-SXM4-40GB"
+  },
+  "n_eval_utterances_scored": 71237,
+  "n_attribution_overlap_rows": 600,
+  "eer_results": {
+    "eer_original_pct": 0.22069465645264424,
+    "eer_threshold_original": 1.995739221572876,
+    "eer_trimmed_pct": 8.810945959144464,
+    "eer_threshold_trimmed": -4.638018608093262,
+    "eer_delta_pct": 8.59025130269182,
+    "n_bonafide": 7355,
+    "n_spoof": 63882,
+    "prediction_flip_rate_overall": 0.06542948187037635,
+    "prediction_flip_rate_bonafide": 0.601631543167913,
+    "prediction_flip_rate_spoof": 0.003694311386619079
+  },
+  "phase1_consistency_check": null,
+  "silence_only_shortcut_probe": {
+    "leading_silence_ms": {
+      "eer_pct": 15.879815459379337,
+      "orientation": "longer_silence=bonafide",
+      "mean_bonafide_ms": 853.4493541808293,
+      "mean_spoof_ms": 178.43749412980182,
+      "median_bonafide_ms": 768.0,
+      "median_spoof_ms": 32.0,
+      "mannwhitney_u": 424306187.5,
+      "mannwhitney_p": 0.0
+    },
+    "trailing_silence_ms": {
+      "eer_pct": 38.12357020169602,
+      "orientation": "longer_silence=bonafide",
+      "mean_bonafide_ms": 399.9312457511897,
+      "mean_spoof_ms": 184.64784387620927,
+      "median_bonafide_ms": 275.375,
+      "median_spoof_ms": 122.21875,
+      "mannwhitney_u": 327958495.5,
+      "mannwhitney_p": 0.0
+    }
+  },
+  "numpy_version": "1.23.5",
+  "librosa_version": "0.9.1",
+  "source_verified": "Aug 2026 \u2014 pad(), genSpoof_list(), compute_eer(target=bonafide, nontarget=spoof), and Model.forward() verified against repo source. silence_top_db=40 verified against Muller et al. (arXiv:2106.12914) Section 4.3 (\"ref db of 40\"); this project's own Phase 3 plan document specified top_db=25 with no cited source for that number."
+}

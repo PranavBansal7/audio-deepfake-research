@@ -1,0 +1,25 @@
+{
+  "question": "Does reconstruction induce a larger attribution change in Hindi than English? Interaction = (Hindi fake-real) - (English fake-real).",
+  "features": [
+    "low_frac",
+    "mid_frac",
+    "high_frac",
+    "speech_frac",
+    "silence_frac",
+    "gini",
+    "entropy",
+    "topk_1pct",
+    "topk_5pct",
+    "topk_10pct"
+  ],
+  "primary_inference": "speaker-cluster bootstrap 95% CI",
+  "seed": 5235,
+  "n_bootstrap": 2000,
+  "ci": 0.95,
+  "methods_included": [
+    "integrated_gradients",
+    "occlusion_20ms",
+    "occlusion_50ms",
+    "occlusion_100ms"
+  ]
+}

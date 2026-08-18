@@ -1,0 +1,48 @@
+{
+  "english_cv_gl": {
+    "eer_pct": 16.177777777777777,
+    "threshold": -0.5049806833267212,
+    "bootstrap_mean_eer_pct": 15.976354986831149,
+    "ci_lo_pct": 14.335050505050507,
+    "ci_hi_pct": 17.56169557964421,
+    "n_utterances": 2250,
+    "n_clusters": 974,
+    "bootstrap_unit": "speaker"
+  },
+  "hindi_gl": {
+    "eer_pct": 30.488888888888887,
+    "threshold": 0.4493870735168457,
+    "bootstrap_mean_eer_pct": 30.50363586738091,
+    "ci_lo_pct": 27.674568965517242,
+    "ci_hi_pct": 33.24615042219754,
+    "n_utterances": 2250,
+    "n_clusters": 338,
+    "bootstrap_unit": "speaker"
+  },
+  "language_difference": {
+    "observed_hindi_minus_english_pct_points": 14.31111111111111,
+    "ci_lo_pct_points": 11.383003924008817,
+    "ci_hi_pct_points": 17.91995586200259
+  },
+  "hindi_amplitude_qc": {
+    "rms_matched_pairs": 1081,
+    "peak_limited_pairs": 44
+  },
+  "hindi_rms_matched_sensitivity": {
+    "eer_pct": 30.3422756706753,
+    "threshold": 0.5059695839881897,
+    "bootstrap_mean_eer_pct": 30.283988072950752,
+    "ci_lo_pct": 27.508398794120353,
+    "ci_hi_pct": 33.08555325235982,
+    "n_utterances": 2162,
+    "n_clusters": 330,
+    "bootstrap_unit": "speaker"
+  },
+  "asvspoof_2019_la": {
+    "eer_pct": 0.22827544607600037,
+    "source": "eval_CM_scores_2019_LA_eval.txt",
+    "note": "recomputed from the Phase-1 score file",
+    "n_bonafide": 7355,
+    "n_spoof": 63882
+  }
+}

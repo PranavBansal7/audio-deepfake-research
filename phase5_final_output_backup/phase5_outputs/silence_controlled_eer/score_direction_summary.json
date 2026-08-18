@@ -1,0 +1,61 @@
+{
+  "config": {
+    "sample_rate": 16000,
+    "checkpoint_path": "pretrained_models/best_SSL_model_LA.pth"
+  },
+  "note": "threshold_flip uses each condition's own EER-optimal threshold (raw threshold for raw scores, trimmed threshold for trimmed scores) to decide bonafide-vs-spoof, then flags utterances whose decision differs raw-vs-trimmed. sign_flip is a threshold-free reference using logit >= 0 as the boundary.",
+  "per_language": [
+    {
+      "language": "english",
+      "n_utterances": 2250,
+      "raw_threshold": -0.5049806833267212,
+      "trimmed_threshold": -2.8621976375579834,
+      "spearman_rho_overall": 0.6389420755770355,
+      "spearman_p_overall": 2.0237601997096723e-258,
+      "threshold_flip_rate_overall": 0.3342222222222222,
+      "sign_flip_rate_overall": 0.21822222222222223,
+      "by_label": {
+        "real_bonafide": {
+          "n": 1125,
+          "spearman_rho": 0.3418427126329252,
+          "spearman_p": 3.439818249481841e-32,
+          "threshold_flip_rate": 0.4,
+          "sign_flip_rate": 0.43644444444444447
+        },
+        "fake_spoof": {
+          "n": 1125,
+          "spearman_rho": 0.9999721202084243,
+          "spearman_p": 0.0,
+          "threshold_flip_rate": 0.26844444444444443,
+          "sign_flip_rate": 0.0
+        }
+      }
+    },
+    {
+      "language": "hindi",
+      "n_utterances": 2250,
+      "raw_threshold": 0.4493870735168457,
+      "trimmed_threshold": -1.2391270399093628,
+      "spearman_rho_overall": 0.5900899967914397,
+      "spearman_p_overall": 3.2704274751107707e-211,
+      "threshold_flip_rate_overall": 0.3457777777777778,
+      "sign_flip_rate_overall": 0.212,
+      "by_label": {
+        "real_bonafide": {
+          "n": 1125,
+          "spearman_rho": 0.43247705795718155,
+          "spearman_p": 1.753677474422689e-52,
+          "threshold_flip_rate": 0.3973333333333333,
+          "sign_flip_rate": 0.3982222222222222
+        },
+        "fake_spoof": {
+          "n": 1125,
+          "spearman_rho": 0.9159940835508807,
+          "spearman_p": 0.0,
+          "threshold_flip_rate": 0.2942222222222222,
+          "sign_flip_rate": 0.025777777777777778
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "config": {
+    "sample_rate": 16000,
+    "top_db": 40.0,
+    "frame_length": 2048,
+    "hop_length": 512,
+    "fixed_len": 64600,
+    "checkpoint_path": "pretrained_models/best_SSL_model_LA.pth",
+    "seed": 4235,
+    "n_bootstrap": 2000,
+    "ci": 0.95
+  },
+  "raw_phase5_gap": {
+    "english_raw_eer_pct": 16.177777777777777,
+    "hindi_raw_eer_pct": 30.488888888888887,
+    "raw_hindi_minus_english_pp": 14.31111111111111
+  },
+  "trimmed_language_summaries": [
+    {
+      "eer_pct": 43.111111111111114,
+      "threshold": -2.8621976375579834,
+      "bootstrap_mean_eer_pct": 43.032798710564975,
+      "ci_lo_pct": 40.98779778644583,
+      "ci_hi_pct": 45.04408813692701,
+      "n_utterances": 2250,
+      "n_clusters": 974,
+      "bootstrap_unit": "speaker",
+      "bootstrap_seed": 4236,
+      "n_bootstrap": 2000,
+      "language": "english"
+    },
+    {
+      "eer_pct": 55.91111111111111,
+      "threshold": -1.2391270399093628,
+      "bootstrap_mean_eer_pct": 55.80574243257664,
+      "ci_lo_pct": 53.183805544231554,
+      "ci_hi_pct": 58.35547523688581,
+      "n_utterances": 2250,
+      "n_clusters": 338,
+      "bootstrap_unit": "speaker",
+      "bootstrap_seed": 4237,
+      "n_bootstrap": 2000,
+      "language": "hindi"
+    }
+  ],
+  "trimmed_hindi_minus_english_gap": {
+    "trimmed": true,
+    "observed_hindi_minus_english_eer_pp": 12.8,
+    "ci_lo_pp": 9.539953589257994,
+    "ci_hi_pp": 16.12402873600195,
+    "bootstrap_mean_pp": 12.79529585186891,
+    "n_bootstrap": 2000,
+    "bootstrap_unit": "speaker"
+  },
+  "interpretation": "Primary sensitivity question: whether the language gap persists after the same deterministic leading/trailing-silence trim is applied independently to every utterance."
+}

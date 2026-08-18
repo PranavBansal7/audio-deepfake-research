@@ -1,0 +1,15 @@
+2026-08-14 03:13:59,237 | INFO | Starting Phase 5 on cuda
+2026-08-14 03:14:15,360 | INFO | Model output verified as [spoof_logit, bonafide_logit] (index 1 = bonafide, per Phase 1/2 verification).
+2026-08-14 03:14:23,908 | INFO | hindi: 1125 pairs, 338 independent clusters, mean content fraction 0.957
+2026-08-14 03:14:26,990 | INFO | english_cv: 1125 pairs, 974 independent clusters, mean content fraction 0.925
+2026-08-14 03:54:28,641 | INFO | Phase 5 completed successfully: phase5_outputs
+2026-08-14 15:24:52,822 | INFO | === Phase 5b: occlusion statistical analysis (reads phase5_outputs) ===
+2026-08-14 15:25:15,833 | INFO | Model output verified as [spoof_logit, bonafide_logit] (index 1 = bonafide, per Phase 1/2 verification).
+2026-08-14 15:25:15,835 | INFO | --- occlusion window = 20 ms (primary) ---
+2026-08-14 15:27:52,727 | INFO | --- occlusion window = 50 ms ---
+2026-08-14 15:30:23,932 | INFO | --- occlusion window = 100 ms ---
+2026-08-14 15:32:56,313 | INFO | IG vs occlusion (window=20ms) direction agreement: 36/40 feature-comparisons.
+2026-08-14 15:32:56,313 | INFO | Phase 5b occlusion analysis complete: phase5_outputs/occlusion_analysis
+2026-08-14 16:06:39,851 | INFO | Model output verified as [spoof_logit, bonafide_logit] (index 1 = bonafide, per Phase 1/2 verification).
+2026-08-14 17:29:27,731 | INFO | Model output verified as [spoof_logit, bonafide_logit] (index 1 = bonafide, per Phase 1/2 verification).
+2026-08-14 18:35:32,246 | INFO | Model output verified as [spoof_logit, bonafide_logit] (index 1 = bonafide, per Phase 1/2 verification).

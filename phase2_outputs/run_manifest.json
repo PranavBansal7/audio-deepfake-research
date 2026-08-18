@@ -1,0 +1,38 @@
+{
+  "phase": "Phase 2 \u2014 XAI on English (Replication)",
+  "timestamp": "2026-08-07T02:27:55.777657",
+  "config": {
+    "database_path": "database/LA/ASVspoof2019_LA_eval",
+    "protocol_path": "database/ASVspoof_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt",
+    "checkpoint_path": "pretrained_models/best_SSL_model_LA.pth",
+    "out_dir": "phase2_outputs",
+    "n_bonafide": 50,
+    "n_spoof": 50,
+    "seed": 1234,
+    "sample_rate": 16000,
+    "fixed_len": 64600,
+    "occlusion_window_sizes_ms": [
+      20,
+      50,
+      100
+    ],
+    "occlusion_step_frac": 0.5,
+    "occlusion_batch_size": 128,
+    "ig_n_steps": 50,
+    "target_class": 1,
+    "faithfulness_topk_fracs": [
+      0.05,
+      0.1,
+      0.2
+    ],
+    "device": "cuda"
+  },
+  "n_samples": 100,
+  "n_faithfulness_rows": 1200,
+  "torch_version": "1.13.1+cu117",
+  "numpy_version": "1.23.5",
+  "librosa_version": "0.9.1",
+  "device_name": "NVIDIA A100-SXM4-40GB",
+  "device_vram_gb": 42.3,
+  "source_verified": "Aug 2026 \u2014 pad(), target_class, Model.forward() verified against repo source"
+}

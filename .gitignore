@@ -1,40 +1,33 @@
-# jupyter
+# Python and notebook runtime files
+__pycache__/
+*.py[cod]
 .ipynb_checkpoints/
 
-# python
-__pycache__/
-*.pyc
-
-#datasets
-database/
+# Raw datasets and locally generated audio
+database/LA/
 *.flac
-*.zip
-
-# model checkpoints
-*.pth
-
-# temp scripts
-extract_code.py
-
-# Extra ignores
-*.pt
 *.wav
-pretrained_models/
-Scores/
-phase2_outputs/
-*.swp
-*.swp
-eval_CM_scores_2019_LA_eval.txt
-phase3_outputs/
+*.mp3
+*.zip
+*.tar.gz
+cv_english_subset/
 1781715680033-cv-corpus-26.0-2026-06-12-hi/
-README_phase4.md
+hindi_griffinlim_eval_final/
+english_griffinlim_eval_final/
+
+# External model files
+*.pt
+*.pth
+pretrained_models/
+
+# Local scratch files and exploratory scripts
+*.swp
+extract_code.py
 estimate_pool.py
 full_pool_scan.py
-hindi_griffinlim_eval_final/
 sweep_inv_mel_iters.py
 flagged_109.csv
 clean_1016.csv
 hindi_pair_speaker_map.csv
-phase5_outputs/
-english_griffinlim_eval_final/
-cv_english_subset/
+
+# The versioned Phase 2, 3, and 5 archives are research artifacts, not ignored.

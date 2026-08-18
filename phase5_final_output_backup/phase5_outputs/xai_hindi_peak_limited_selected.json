@@ -1,0 +1,12 @@
+{
+  "selected_peak_limited_pair_count": 6,
+  "selected_peak_limited_pair_ids": [
+    "142",
+    "248",
+    "369",
+    "772",
+    "83",
+    "907"
+  ],
+  "note": "Peak-limited pairs are retained in the primary XAI sample, matching the primary-EER inclusion policy; this file records the count for the sensitivity analysis."
+}

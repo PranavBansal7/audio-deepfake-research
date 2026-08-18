@@ -1,0 +1,30 @@
+{
+  "experiment": "attribution_failure_coupling",
+  "question": "Within fake clips, are unusual explanation patterns associated with detector difficulty, and does that association differ between English and Hindi?",
+  "difficulty_definition": "bonafide_logit - raw language-specific EER threshold; higher means the fake is more bonafide-like and harder to detect",
+  "english_threshold": -0.5008425712585449,
+  "hindi_threshold": 0.4633710086345672,
+  "headline": {
+    "english": {
+      "n_fake": 100,
+      "n_speakers": 99,
+      "eer_threshold": -0.5008425712585449,
+      "difficulty_high_frac_rho": 0.3385058505850585,
+      "difficulty_high_frac_p": 0.000571514605031603,
+      "difficulty_mean": -1.8766657668352127,
+      "difficulty_median": -2.3800628185272217
+    },
+    "hindi": {
+      "n_fake": 100,
+      "n_speakers": 86,
+      "eer_threshold": 0.4633710086345672,
+      "difficulty_high_frac_rho": 0.5528592859285928,
+      "difficulty_high_frac_p": 2.457391591635121e-09,
+      "difficulty_mean": -0.37594473373144865,
+      "difficulty_median": -0.9540182054042816
+    }
+  },
+  "n_bootstrap": 2000,
+  "bootstrap_unit": "speaker",
+  "spectral_partial_control": false
+}

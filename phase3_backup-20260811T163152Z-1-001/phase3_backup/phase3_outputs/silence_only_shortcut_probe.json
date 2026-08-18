@@ -1,0 +1,22 @@
+{
+  "leading_silence_ms": {
+    "eer_pct": 15.879815459379337,
+    "orientation": "longer_silence=bonafide",
+    "mean_bonafide_ms": 853.4493541808293,
+    "mean_spoof_ms": 178.43749412980182,
+    "median_bonafide_ms": 768.0,
+    "median_spoof_ms": 32.0,
+    "mannwhitney_u": 424306187.5,
+    "mannwhitney_p": 0.0
+  },
+  "trailing_silence_ms": {
+    "eer_pct": 38.12357020169602,
+    "orientation": "longer_silence=bonafide",
+    "mean_bonafide_ms": 399.9312457511897,
+    "mean_spoof_ms": 184.64784387620927,
+    "median_bonafide_ms": 275.375,
+    "median_spoof_ms": 122.21875,
+    "mannwhitney_u": 327958495.5,
+    "mannwhitney_p": 0.0
+  }
+}

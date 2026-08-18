@@ -1,0 +1,71 @@
+{
+  "config": {
+    "checkpoint_path": "pretrained_models/best_SSL_model_LA.pth",
+    "hindi_dir": "hindi_griffinlim_eval_final",
+    "english_cv_dir": "english_griffinlim_eval_final",
+    "phase1_out_dir": "phase1_outputs",
+    "phase1_scores_path": "eval_CM_scores_2019_LA_eval.txt",
+    "en_protocol_path": "database/ASVspoof_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt",
+    "en_database_path": "database/LA/ASVspoof2019_LA_eval",
+    "out_dir": "phase5_outputs",
+    "sample_rate": 16000,
+    "fixed_len": 64600,
+    "eval_batch_size": 64,
+    "num_workers": 4,
+    "n_eer_bootstrap": 2000,
+    "n_bootstrap": 2000,
+    "ci": 0.95,
+    "n_xai_pairs_per_language": 100,
+    "n_english_a11": 100,
+    "n_english_bonafide_matched": 100,
+    "seed": 1234,
+    "occlusion_windows_ms": [
+      20,
+      50,
+      100
+    ],
+    "occlusion_step_frac": 0.5,
+    "occlusion_batch_size": 128,
+    "ig_n_steps": 50,
+    "ig_internal_batch_size": 50,
+    "target_class": 1,
+    "faithfulness_fracs": [
+      0.05,
+      0.1,
+      0.2
+    ],
+    "stft_n_fft": 512,
+    "stft_hop": 160,
+    "freq_bands": [
+      [
+        "low",
+        [
+          0,
+          1000
+        ]
+      ],
+      [
+        "mid",
+        [
+          1000,
+          4000
+        ]
+      ],
+      [
+        "high",
+        [
+          4000,
+          8000
+        ]
+      ]
+    ],
+    "stability_frac": 0.1,
+    "silence_top_db": 40.0,
+    "silence_frame_length": 2048,
+    "silence_hop_length": 512,
+    "dpi": 300,
+    "device": "cuda"
+  },
+  "config_sha256": "c40e65e32763028abdd3aa24c6e47338b38f64ba03629c776d37fe87d0113793",
+  "script": "phase5_hindi_eval.py"
+}

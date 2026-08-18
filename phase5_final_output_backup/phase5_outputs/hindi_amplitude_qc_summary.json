@@ -1,0 +1,13 @@
+{
+  "n_pairs": 1125,
+  "normalization_counts": {
+    "rms_matched": 1081,
+    "peak_normalized": 44
+  },
+  "primary_includes_all_pairs": true,
+  "rms_matched_pairs": 1081,
+  "peak_limited_pairs": 44,
+  "mean_relative_rms_error": 0.010856896316279046,
+  "median_relative_rms_error": 4.56160544914982e-08,
+  "max_relative_rms_error": 0.5498052486211746
+}

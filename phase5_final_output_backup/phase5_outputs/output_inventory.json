@@ -1,0 +1,12 @@
+{
+  "english_pairs": 1125,
+  "hindi_pairs": 1125,
+  "english_clusters": 974,
+  "hindi_clusters": 338,
+  "hindi_client_id_available": true,
+  "hindi_rms_matched": 1081,
+  "hindi_peak_limited": 44,
+  "xai_pairs_per_language": 100,
+  "a11_xai_samples": 200,
+  "config_sha256": "c40e65e32763028abdd3aa24c6e47338b38f64ba03629c776d37fe87d0113793"
+}
