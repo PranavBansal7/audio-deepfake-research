@@ -1,16 +1,16 @@
 # Explainability as a Diagnostic Tool for Multilingual Failure in Audio Deepfake Detection
 
-> **Manuscript status:** [`research (7).pdf`](research%20(7).pdf) is an unpublished research draft. Its methods, analyses, results, and conclusions may change before submission or publication.
+> **Manuscript status:** [`research (7).pdf`](research%20(7).pdf) is a stable research manuscript. Minor wording, formatting, and presentation changes may occur before submission; the reported methodology, experiments, results, and conclusions are fixed.
 
-This repository contains the code and frozen experimental artifacts supporting the draft paper, *Explainability as a Diagnostic Tool for Multilingual Failure in Audio Deepfake Detection*. It studies why a wav2vec 2.0 XLS-R + AASIST detector degrades on controlled Hindi versus English Griffin-Lim copy-synthesis data, using occlusion, Integrated Gradients, faithfulness tests, silence analyses, and acoustic robustness controls.
+This repository contains the code and frozen experimental artifacts supporting the manuscript, *Explainability as a Diagnostic Tool for Multilingual Failure in Audio Deepfake Detection*. It studies why a wav2vec 2.0 XLS-R + AASIST detector degrades on controlled Hindi versus English Griffin-Lim copy-synthesis data, using occlusion, Integrated Gradients, faithfulness tests, silence analyses, and acoustic robustness controls.
 
-The primary result reported in the draft is a higher EER for Hindi (30.49%) than English (16.18%) under the matched Common Voice / Griffin-Lim protocol. The analyses investigate the persistence of this gap after silence trimming and acoustic controls, and the associated shift in frequency-band attribution.
+The primary result reported in the manuscript is a higher EER for Hindi (30.49%) than English (16.18%) under the matched Common Voice / Griffin-Lim protocol. The analyses investigate the persistence of this gap after silence trimming and acoustic controls, and the associated shift in frequency-band attribution.
 
 ## Contents
 
 | Area | Included material |
 | --- | --- |
-| Paper | `research (7).pdf` — current manuscript draft |
+| Paper | `research (7).pdf` — current stable manuscript |
 | Baseline and model support | `model.py`, `data_utils_SSL.py`, `RawBoost.py`, `eval_metric_LA.py`, `run_eval_2019LA.py`, and the pinned `fairseq-*` source |
 | Phase 2 | English ASVspoof 2019 LA XAI replication: `phase2_xai_english_clean.py` and `phase2_outputs/` |
 | Phase 3 | Silence-shortcut replication: `phase3_shortcut.py` and `phase3_backup-20260811T163152Z-1-001/` |
@@ -18,7 +18,7 @@ The primary result reported in the draft is a higher EER for Hindi (30.49%) than
 | Phase 5 | Controlled English/Hindi evaluation, attribution analysis, and frozen results in `phase5_final_output_backup/` |
 | Follow-up analyses | `exp1_*` through `exp8_*`, plus the continuation helpers for the reported robustness and explanation-drift analyses |
 
-The tracked output directories contain the artifacts used by the draft, including attribution arrays, figures, score tables, run manifests, confidence-interval analyses, and statistical summaries. Raw datasets, audio clips, and model checkpoints are intentionally excluded.
+The tracked output directories contain the artifacts used by the manuscript, including attribution arrays, figures, score tables, run manifests, confidence-interval analyses, and statistical summaries. Raw datasets, audio clips, and model checkpoints are intentionally excluded.
 
 ## Requirements and external inputs
 
@@ -53,13 +53,17 @@ The model-dependent scripts expect `xlsr2_300m.pt` at the repository root and th
 3. `phase3_shortcut.py` tests the silence shortcut on ASVspoof 2019 LA.
 4. `prepare_hindi_griffinlim.py` and `prepare_english_griffinlim.py` construct matched Common Voice Griffin-Lim control data; the corresponding `sanity_check_*.py` scripts validate it.
 5. `phase5_hindi_eval.py` and `phase5b_occlusion_stats.py` run the controlled English–Hindi evaluation and explanation analysis.
-6. `exp1_*`–`exp8_*` reproduce the paper's robustness, interaction, spectral, speaker-level, and frequency-intervention analyses from the frozen Phase 5 data.
+6. `exp1_*`–`exp8_*` reproduce the manuscript's robustness, interaction, spectral, speaker-level, and frequency-intervention analyses from the frozen Phase 5 data.
 
-Read the configuration blocks and docstrings in each script before execution: dataset locations, checkpoints, and hardware assumptions are environment-specific. The archived result directories allow the paper's reported analyses to be inspected without rerunning data preparation or GPU inference.
+Read the configuration blocks and docstrings in each script before execution: dataset locations, checkpoints, and hardware assumptions are environment-specific. The archived result directories allow the manuscript's reported analyses to be inspected without rerunning data preparation or GPU inference.
 
 ## Provenance and attribution
 
-The detector implementation and pretrained-model workflow build on [Hemlata Tak et al.'s SSL_Anti-spoofing repository](https://github.com/TakHemlata/SSL_Anti-spoofing) and the associated wav2vec 2.0 XLS-R + AASIST work. The original MIT license is retained in [`LICENSE`](LICENSE). This repository's project-specific research scripts, controlled datasets, analyses, and frozen output artifacts support the draft paper above; it does not claim authorship of the underlying detector architecture.
+The detector implementation and pretrained-model workflow build on [Hemlata Tak et al.'s SSL_Anti-spoofing repository](https://github.com/TakHemlata/SSL_Anti-spoofing) and the associated wav2vec 2.0 XLS-R + AASIST work. The original MIT license is preserved in [`LICENSES/LICENSE-upstream-SSL-Anti-spoofing.txt`](LICENSES/LICENSE-upstream-SSL-Anti-spoofing.txt). This repository's project-specific research scripts, controlled datasets, analyses, and frozen output artifacts support the manuscript above; it does not claim authorship of the underlying detector architecture.
+
+The repository also preserves the chronological development of the research across its Git history. Earlier exploratory and experimental work is retained in the companion repository [`wav2vec2-xlsr-aasist`](https://github.com/PranavBansal7/wav2vec2-xlsr-aasist), while this repository serves as the consolidated manuscript and research-artifact record.
+
+See [`RIGHTS.md`](RIGHTS.md) for the distinction between upstream third-party material and original project materials.
 
 If you use the underlying detector implementation, please cite the original work:
 
